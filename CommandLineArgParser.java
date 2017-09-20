@@ -19,19 +19,38 @@ class CommandLineArgParser
 		for(i = 0; i < cmdopts.length; i++){
 			switch(cmdopts[i]){
 				case "-k":
-					keyFile = cmdopts[i++];
+					if((i+1) >= cmdopts.length){
+						System.err.println("ERROR: No key file provided");
+						return;
+					}
+
+					keyFile = cmdopts[++i];
 					break;
 
 				case "-i":
-					inputFile = cmdopts[i++];
+					if((i+1) >= cmdopts.length){
+						System.err.println("ERROR: No input file provided");
+						return;
+					}
+
+					inputFile = cmdopts[++i];
 					break;
 				
 				case "-o":
-					outputFile = cmdopts[i++];
+					if((i+1) >= cmdopts.length){
+						System.err.println("ERROR: No output file provided");
+						return;
+					}
+
+					outputFile = cmdopts[++i];
 					break;
 
 				case "-v":
-					ivFile = cmdopts[i++];
+					if((i+1) >= cmdopts.length)
+						return;
+					
+
+					ivFile = cmdopts[++i];
 					break;
 
 				default:
