@@ -16,10 +16,10 @@ int main(int argc, char** argv)
 
     if(argc == 1)
     {
-        cout << right << setfill('0') << setw(4) << hex << rd();
-        cout << right << setfill('0') << setw(4) << hex << rd();
-        cout << right << setfill('0') << setw(4) << hex << rd();
-        cout << right << setfill('0') << setw(4) << hex << rd();
+        cout << right << setfill('0') << setw(8) << hex << rd();
+        cout << right << setfill('0') << setw(8) << hex << rd();
+        cout << right << setfill('0') << setw(8) << hex << rd();
+        cout << right << setfill('0') << setw(8) << hex << rd();
 //        printf("%04x", rd());
         return 0;
     }
@@ -27,7 +27,7 @@ int main(int argc, char** argv)
     int i = stol(string(argv[1]));
     while(i > 0)
     {
-        cout << setfill('0') << setw(4) << hex << rd();
+        cout << setfill('0') << setw(8) << hex << rd();
         // printf("%04x", rd());
         i -= 4;
     }
