@@ -17,10 +17,10 @@ class CTREnc
         try
         {
             data = Files.readAllBytes(cmd_args.getInputFile());
-            key = Files.readAllBytes(cmd_args.getKeyFile());
+            key = utils.hexStringToBinary(Files.readAllBytes(cmd_args.getKeyFile()));
             if(cmd_args.hasIVFile())
             {
-                iv = Files.readAllBytes(cmd_args.getIVFile());
+                iv = utils.hexStringToBinary(Files.readAllBytes(cmd_args.getIVFile()));
             }
         }
         catch(IOException e) { System.err.println(e.getMessage()); }
