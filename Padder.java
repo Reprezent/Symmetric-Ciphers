@@ -5,6 +5,7 @@
 
 
 import java.util.Arrays;
+import java.lang.Integer;
 
 class Padder
 {
@@ -19,7 +20,10 @@ class Padder
     static public byte[] pad(byte[] data, int blocksize)
     {
 
-		int padlength = data.length % blocksize;
+		int padlength = AES.blocksize() - data.length % blocksize;
+        System.err.println("Data length: " + Integer.toString(data.length));
+        System.err.println("Blocksize: " + Integer.toString(blocksize));
+        System.err.println("Pad Length: " + Integer.toString(padlength));
 
 		// padding an extra blocksize if the padlength would be 0
 		if(padlength == 0)
