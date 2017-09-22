@@ -13,6 +13,7 @@ class Padder
     //
     // Param: data Plaintext to be encrypted.
     // Param: blockize Blocksize  of the cryptographic scheme.
+    //
     // Return: byte[] Plaintext with padding added. 
     //
     static public byte[] pad(byte[] data, int blocksize)

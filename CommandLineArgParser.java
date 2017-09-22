@@ -3,6 +3,9 @@
 // Programming Assignment 1
 //
 
+import java.nio.file.Paths;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 
 class CommandLineArgParser
 {
@@ -21,7 +24,7 @@ class CommandLineArgParser
 				case "-k":
 					if((i+1) >= cmdopts.length){
 						System.err.println("ERROR: No key file provided.");
-                        System.exit();
+                        System.exit(-1);
 						return;
 					}
 
@@ -31,7 +34,7 @@ class CommandLineArgParser
 				case "-i":
 					if((i+1) >= cmdopts.length){
 						System.err.println("ERROR: No input file provided.");
-                        System.exit();
+                        System.exit(-1);
 						return;
 					}
 
@@ -41,7 +44,7 @@ class CommandLineArgParser
 				case "-o":
 					if((i+1) >= cmdopts.length){
 						System.err.println("ERROR: No output file provided.");
-                        System.exit();
+                        System.exit(-1);
 						return;
 					}
 
@@ -52,7 +55,7 @@ class CommandLineArgParser
 					if((i+1) >= cmdopts.length)
                     {
                         System.err.println("ERROR: No IV file provided.");
-                        System.exit();
+                        System.exit(-1);
 						return;
                     }
 					
@@ -66,6 +69,17 @@ class CommandLineArgParser
 			}
 		}
 
+        if(keyFile == null || inputFile == null || outputFile == null)
+        {
+            printUsage();
+            System.exit(-1);
+        }
+
+    }
+
+    private void printUsage()
+    {
+
     }
 
     public boolean hasKeyFile()
@@ -73,9 +87,18 @@ class CommandLineArgParser
 		return keyFile != null;
     }
 
-    public String getKeyFile()
+    public Path getKeyFile()
     {
-		return keyFile;
+        try
+        {
+		    return Paths.get(keyFile);
+        }
+        catch(InvalidPathException e)
+        {
+            System.err.println(e.getMessage());
+        }
+
+        return null;
     }
 
     public boolean hasInputFile()
@@ -83,9 +106,18 @@ class CommandLineArgParser
 		return inputFile != null;
     }
 
-    public String getInputFile()
+    public Path getInputFile()
     {
-		return inputFile;
+        try
+        {
+		    return Paths.get(inputFile);
+        }
+        catch(InvalidPathException e)
+        {
+            System.err.println(e.getMessage());
+        }
+
+        return null;
     }
 
 
@@ -95,9 +127,18 @@ class CommandLineArgParser
     }
 
 
-    public String getOutputFile()
+    public Path getOutputFile()
     {
-		return outputFile;
+        try
+        {
+		    return Paths.get(outputFile);
+        }
+        catch(InvalidPathException e)
+        {
+            System.err.println(e.getMessage());
+        }
+
+        return null;
     }
 
     public boolean hasIVFile()
@@ -105,9 +146,18 @@ class CommandLineArgParser
 		return ivFile != null;
     }
 
-    public String getIVFile()
+    public Path getIVFile()
     {
-		return ivFile;
+        try
+        {
+		    return Paths.get(ivFile);
+        }
+        catch(InvalidPathException e)
+        {
+            System.err.println(e.getMessage());
+        }
+
+        return null;
     }
 
 

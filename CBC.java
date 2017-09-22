@@ -44,7 +44,7 @@ class CBC{
         return encrypt(msg, key, buffer);
     }
 
-	public static byte[] decrypt(byte[] msg, byte[] key){
+	public static byte[] decrypt(byte[] msg, byte[] key, byte[] iv){
 		byte[] decrypted =  new byte[msg.length];
 		
 		//unpad
@@ -52,4 +52,14 @@ class CBC{
 
 		return decrypted;
 	}
+
+    public static byte[] decrypt(byte[] msg, byte[] key)
+    {
+        // IV generation
+        SecureRandom rng = new SecureRandom();
+        byte[] buffer = new byte[AES.blocksize()];
+        rng.nextBytes(buffer);
+
+        return decrypt(msg, key, buffer);
+    }
 }

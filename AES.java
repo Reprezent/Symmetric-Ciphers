@@ -51,33 +51,14 @@ class AES
             c.init(opmode, new SecretKeySpec(key, "AES"));
             return c.doFinal(data);
         }
-        catch(IllegalArgumentException e)
-        {
+        catch(IllegalArgumentException e)  { System.err.println(e.getMessage()); }
+        catch(NoSuchAlgorithmException e)  { System.err.println(e.getMessage()); }
+        catch(NoSuchPaddingException e)    { System.err.println(e.getMessage()); }
+        catch(InvalidKeyException e)       { System.err.println(e.getMessage()); }
+        catch(IllegalBlockSizeException e) { System.err.println(e.getMessage()); }
+        catch(BadPaddingException e)       { System.err.println(e.getMessage()); }
 
-
-        }
-        catch(NoSuchAlgorithmException e)
-        {
-
-        }
-        catch(NoSuchPaddingException e)
-        {
-
-        }
-        catch(InvalidKeyException e)
-        {
-
-        }
-        catch(IllegalBlockSizeException e)
-        {
-
-        }
-        catch(BadPaddingException e)
-        {
-
-        }
-
-        return new byte[0];
+        return null;
     }
 
 
