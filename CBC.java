@@ -57,22 +57,35 @@ class CBC{
         return encrypt(msg, key, buffer);
     }
 
-	public static byte[] decrypt(byte[] msg, byte[] key, byte[] iv){
+	public static byte[] decrypt(byte[] msg, byte[] key) {
 		byte[] decrypted =  new byte[msg.length];
+        System.err.println("Msg length: " + Integer.toString(msg.length));
 		
+        byte[] cipher = Arrays.copyOf(msg, AES.blocksize());
+        byte[] buffer;
+        byte[] enc_msg;
+
+        for(int i = AES.blocksize(); i < msg.length; i += AES.blocksize())
+        {
+            enc_msg = Arrays.copyOfRange(msg, i, i + AES.blocksize());
+            buffer = AES.Decrypt(enc_msg, key);
+            System.err.println("Buffer length: " + Integer.toString(buffer.length));
+            for(int j = 0; j < buffer.length; j++)
+            {
+                try{
+				decrypted[i + j] = (byte)(buffer[j] ^ cipher[j]);
+                }
+                catch(ArrayIndexOutOfBoundsException e)
+                {
+                    System.err.println("I is " + Integer.toString(i));
+                    System.err.println("J is " + Integer.toString(j));
+                    System.exit(-1);
+                }
+			}
+        }
 		//unpad
 
-
-		return decrypted;
+        
+		return Padder.unpad(decrypted);
 	}
-
-    public static byte[] decrypt(byte[] msg, byte[] key)
-    {
-        // IV generation
-        SecureRandom rng = new SecureRandom();
-        byte[] buffer = new byte[AES.blocksize()];
-        rng.nextBytes(buffer);
-
-        return decrypt(msg, key, buffer);
-    }
 }

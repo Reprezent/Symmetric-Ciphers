@@ -13,19 +13,15 @@ class CBCDec
     public CBCDec(String[] args)
     {
         CommandLineArgParser cmd_args = new CommandLineArgParser(args);
-        byte[] data = null, iv = null, key = null, output = null;
+        byte[] data = null, key = null, output = null;
         try
         {
             data = Files.readAllBytes(cmd_args.getInputFile());
             key = utils.hexStringToBinary(Files.readAllBytes(cmd_args.getKeyFile()));
-            if(cmd_args.hasIVFile())
-            {
-                iv = utils.hexStringToBinary(Files.readAllBytes(cmd_args.getIVFile()));
-            }
         }
         catch(IOException e) { System.err.println(e.getMessage()); }
         
-        output = ((iv == null) ? CBC.decrypt(data, key) : CBC.decrypt(data, key, iv));
+        output = CBC.decrypt(data, key);
 
         try
         {

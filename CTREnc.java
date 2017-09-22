@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.io.IOException;
 import java.lang.UnsupportedOperationException;
 import java.lang.SecurityException;
+import java.lang.Integer;
 
 class CTREnc
 {
@@ -17,6 +18,7 @@ class CTREnc
         try
         {
             data = Files.readAllBytes(cmd_args.getInputFile());
+            System.err.println("Data length: " + Integer.toString(data.length));
             key = utils.hexStringToBinary(Files.readAllBytes(cmd_args.getKeyFile()));
             if(cmd_args.hasIVFile())
             {

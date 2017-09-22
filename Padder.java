@@ -6,6 +6,9 @@
 
 import java.util.Arrays;
 import java.lang.Integer;
+import java.lang.Byte;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 class Padder
 {
@@ -20,23 +23,40 @@ class Padder
     static public byte[] pad(byte[] data, int blocksize)
     {
 
-		int padlength = AES.blocksize() - data.length % blocksize;
+        Integer temp = new Integer(blocksize - data.length % blocksize);
+		byte padlength = temp.byteValue();
         System.err.println("Data length: " + Integer.toString(data.length));
         System.err.println("Blocksize: " + Integer.toString(blocksize));
         System.err.println("Pad Length: " + Integer.toString(padlength));
+		byte[] padded_data = Arrays.copyOf(data, data.length + temp.intValue());
 
-		// padding an extra blocksize if the padlength would be 0
-		if(padlength == 0)
-			padlength = blocksize;
-		
-		byte[] padded_data = Arrays.copyOf(data, data.length+padlength);
-
+        // Integer pad_len = new Integer(padlength);
 		//padding the data with the padlength 
 		for(int i = data.length; i < padded_data.length; i++){
-			padded_data[i] = (byte)padlength;
+			padded_data[i] = padlength;
 		}
 
 		return padded_data;
     }
 
+    // Function Name: pad 
+    //
+    // Param: data Plaintext to be encrypted.
+    // Param: blockize Blocksize  of the cryptographic scheme.
+    //
+    // Return: byte[] Plaintext with padding added. 
+    //
+    static public byte[] unpad(byte[] data)
+    {
+        ByteBuffer a = ByteBuffer.allocate(1);
+        a.order(ByteOrder.LITTLE_ENDIAN);
+        a.put(data[data.length - 1]);
+        a.order(ByteOrder.BIG_ENDIAN);
+        a.rewind();
+
+        System.err.println("Data length: " + Integer.toString(data.length));
+        System.err.println("Pad Length: " + Byte.toString(data[data.length - 1]));
+        System.err.println("Pad Length Reversed?: " + Byte.toString(a.get()));
+		return Arrays.copyOf(data, data.length - data[data.length - 1]);
+    }
 }
