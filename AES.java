@@ -10,6 +10,7 @@ import java.security.*;
 
 class AES
 {
+
     // Function Name: 
     //
     // Param: 
@@ -78,4 +79,23 @@ class AES
 
         return new byte[0];
     }
+
+
+    public static int blocksize()
+    {
+        try
+        {
+            return Cipher.getInstance("AES/ECB/NoPadding").getBlockSize();
+        }
+        catch(NoSuchAlgorithmException e)
+        {
+
+        }
+        catch(NoSuchPaddingException e)
+        {
+
+        }
+        return 0;
+    }
+    
 }

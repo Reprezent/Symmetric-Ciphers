@@ -20,7 +20,8 @@ class CommandLineArgParser
 			switch(cmdopts[i]){
 				case "-k":
 					if((i+1) >= cmdopts.length){
-						System.err.println("ERROR: No key file provided");
+						System.err.println("ERROR: No key file provided.");
+                        System.exit();
 						return;
 					}
 
@@ -29,7 +30,8 @@ class CommandLineArgParser
 
 				case "-i":
 					if((i+1) >= cmdopts.length){
-						System.err.println("ERROR: No input file provided");
+						System.err.println("ERROR: No input file provided.");
+                        System.exit();
 						return;
 					}
 
@@ -38,7 +40,8 @@ class CommandLineArgParser
 				
 				case "-o":
 					if((i+1) >= cmdopts.length){
-						System.err.println("ERROR: No output file provided");
+						System.err.println("ERROR: No output file provided.");
+                        System.exit();
 						return;
 					}
 
@@ -47,7 +50,11 @@ class CommandLineArgParser
 
 				case "-v":
 					if((i+1) >= cmdopts.length)
+                    {
+                        System.err.println("ERROR: No IV file provided.");
+                        System.exit();
 						return;
+                    }
 					
 
 					ivFile = cmdopts[++i];

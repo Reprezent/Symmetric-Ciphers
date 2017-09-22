@@ -8,17 +8,17 @@ import java.util.Arrays;
 
 class Padder
 {
-	private int padlength;
 
     // Function Name: pad 
     //
-    // Param: data containing bytes for encrypted data
-    // Param: blockize of the IV
-    // Return: padded data 
+    // Param: data Plaintext to be encrypted.
+    // Param: blockize Blocksize  of the cryptographic scheme.
+    // Return: byte[] Plaintext with padding added. 
     //
-    public byte[] pad(byte[] data, int blocksize)
+    static public byte[] pad(byte[] data, int blocksize)
     {
-		padlength = blocksize%data.length;
+
+		int padlength = data.length % blocksize;
 
 		// padding an extra blocksize if the padlength would be 0
 		if(padlength == 0)
