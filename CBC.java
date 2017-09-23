@@ -7,8 +7,9 @@ import java.lang.Integer;
 
 class CBC{
 
-	public static byte[] encrypt(byte[] msg, byte[] key, byte[] iv){
+	public static byte[] encrypt(byte[] msg, byte[] key, byte[] iv) {
         System.err.println("Msg length: " + Integer.toString(msg.length));
+		System.err.println("IV length: " + Integer.toString(iv.length));
         byte[] padded_msg = Padder.pad(msg, AES.blocksize());
         // Prepend IV
 		byte[] encrypted_msg = Arrays.copyOf(iv, padded_msg.length + iv.length);
@@ -16,6 +17,7 @@ class CBC{
         byte[] buffer = new byte[AES.blocksize()];
     
         System.err.println("padded_msg length: " + Integer.toString(padded_msg.length));
+		System.err.println("encrypted_msg length: " + Integer.toString(encrypted_msg.length));
         System.err.println("Buffer length: " + Integer.toString(buffer.length));
 
 		// block-chaining
@@ -69,7 +71,7 @@ class CBC{
         {
             enc_msg = Arrays.copyOfRange(msg, i, i + AES.blocksize());
             buffer = AES.Decrypt(enc_msg, key);
-            System.err.println("Buffer length: " + Integer.toString(buffer.length));
+            //System.err.println("Buffer length: " + Integer.toString(buffer.length));
             for(int j = 0; j < buffer.length; j++)
             {
                 try{
@@ -82,6 +84,7 @@ class CBC{
                     System.exit(-1);
                 }
 			}
+			cipher = Arrays.copyOf(enc_msg, AES.blocksize());
         }
 		//unpad
 
