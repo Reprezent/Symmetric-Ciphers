@@ -4,6 +4,8 @@ import javax.crypto.*;
 import javax.crypto.spec.*;
 import java.security.*;
 import java.lang.Integer;
+import java.nio.charset.StandardCharsets;
+
 
 class CBC{
 
@@ -15,18 +17,18 @@ class CBC{
 		byte[] encrypted_msg = Arrays.copyOf(iv, padded_msg.length + iv.length);
 		byte[] cipher = iv;
         byte[] buffer = new byte[AES.blocksize()];
-    
+
         System.err.println("padded_msg length: " + Integer.toString(padded_msg.length));
 		System.err.println("encrypted_msg length: " + Integer.toString(encrypted_msg.length));
         System.err.println("Buffer length: " + Integer.toString(buffer.length));
 
 		// block-chaining
-		for(int i = AES.blocksize(); i < padded_msg.length; i+=AES.blocksize()){
+		for(int i = AES.blocksize(); i-AES.blocksize() < padded_msg.length; i+=AES.blocksize()){
 
 			// XORing each byte in the message and current cipher
 			for(int j = 0; j < buffer.length; j++){
                 try{
-				buffer[j] = (byte)(padded_msg[i + j] ^ cipher[j]);
+				buffer[j] = (byte)(padded_msg[i-AES.blocksize() + j] ^ cipher[j]);
                 }
                 catch(ArrayIndexOutOfBoundsException e)
                 {
@@ -60,11 +62,13 @@ class CBC{
     }
 
 	public static byte[] decrypt(byte[] msg, byte[] key) {
-		byte[] decrypted =  new byte[msg.length];
+		byte[] decrypted =  new byte[msg.length - AES.blocksize()];
         System.err.println("Msg length: " + Integer.toString(msg.length));
 		
         byte[] cipher = Arrays.copyOf(msg, AES.blocksize());
+    
         byte[] buffer;
+		byte[] tmp = new byte[AES.blocksize()];
         byte[] enc_msg;
 
         for(int i = AES.blocksize(); i < msg.length; i += AES.blocksize())
@@ -75,7 +79,7 @@ class CBC{
             for(int j = 0; j < buffer.length; j++)
             {
                 try{
-				decrypted[i + j] = (byte)(buffer[j] ^ cipher[j]);
+					decrypted[i-AES.blocksize() + j] = (byte)(buffer[j] ^ cipher[j]);
                 }
                 catch(ArrayIndexOutOfBoundsException e)
                 {
@@ -87,8 +91,6 @@ class CBC{
 			cipher = Arrays.copyOf(enc_msg, AES.blocksize());
         }
 		//unpad
-
-        
 		return Padder.unpad(decrypted);
 	}
 }
