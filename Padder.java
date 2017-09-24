@@ -3,7 +3,6 @@
 // Programming Assignment 1
 //
 
-
 import java.util.Arrays;
 import java.lang.Integer;
 import java.lang.Byte;
@@ -47,16 +46,9 @@ class Padder
     // Return: byte[] Plaintext with padding added. 
     //
     static public byte[] unpad(byte[] data)
-    {
-        ByteBuffer a = ByteBuffer.allocate(1);
-        a.order(ByteOrder.LITTLE_ENDIAN);
-        a.put(data[data.length - 1]);
-        a.order(ByteOrder.BIG_ENDIAN);
-        a.rewind();
-
+    {	
         System.err.println("Data length: " + Integer.toString(data.length));
         System.err.println("Pad Length: " + Byte.toString(data[data.length - 1]));
-        System.err.println("Pad Length Reversed?: " + Byte.toString(a.get()));
-		return Arrays.copyOf(data, data.length - data[data.length - 1]);
+		return Arrays.copyOf(data, data.length - data[data.length-1]);
     }
 }
