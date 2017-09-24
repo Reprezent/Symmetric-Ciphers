@@ -25,10 +25,6 @@ class CTRDec
             data = Files.readAllBytes(cmd_args.getInputFile());
             System.err.println("Data length: " + Integer.toString(data.length));
             key = utils.hexStringToBinary(Files.readAllBytes(cmd_args.getKeyFile()));
-            //if(cmd_args.hasIVFile())
-            //{
-                //iv = utils.hexStringToBinary(Files.readAllBytes(cmd_args.getIVFile()));
-            //}
         }
         catch(IOException e) { System.err.println(e.getMessage()); }
  
@@ -43,7 +39,7 @@ class CTRDec
 		System.err.println("Number of Blocks: " + Integer.toString(numBlocks));
 		System.err.println("Encrypted Message Size: " + decrypted.getOutput().length);
 		
-		ArrayList<EncThreadCTR> decThreads = new ArrayList<EncThreadCTR>();
+		ArrayList<CTR> decThreads = new ArrayList<CTR>();
 		
 		//Create threads, one per block, starting after first block (iv)
 		for (int i = 1; i < numBlocks; i++) {
@@ -51,12 +47,10 @@ class CTRDec
 			int msg_pos = i * AES.blocksize();
 			
 			byte[] msg = Arrays.copyOfRange(data, msg_pos, Math.min(data.length, msg_pos + AES.blocksize()));
-			EncThreadCTR t = new EncThreadCTR(msg, key, Arrays.copyOf(iv,AES.blocksize()), dec_pos, decrypted);
+			CTR t = new CTR(msg, key, Arrays.copyOf(iv,AES.blocksize()), dec_pos, decrypted);
 			decThreads.add(t);
 			t.start();
 			try {
-				//System.err.println("iv last 4 bytes = " + utils.intValue(iv));
-				//utils.printByteArr(iv);
 				iv = utils.addOne(iv);
 			}
 			catch (Exception e) {
@@ -69,7 +63,7 @@ class CTRDec
 		//utils.printByteArr(iv);
 		
 		//join threads
-		for (EncThreadCTR t : decThreads) {
+		for (CTR t : decThreads) {
 			try {
 				t.join();
 			}

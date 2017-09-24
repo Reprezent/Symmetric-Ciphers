@@ -39,17 +39,17 @@ class CTREnc
 			rng.nextBytes(iv);
 		}
 		
-		SharedData cipherBlocks = new SharedData(AES.blocksize() + data.length);
-		cipherBlocks.insertBlock(0,iv);
+		SharedData encrypted = new SharedData(AES.blocksize() + data.length);
+		encrypted.insertBlock(0,iv);
 		//utils.printByteArr(iv);
 		
 		int numBlocks = data.length / AES.blocksize();
 		if (data.length % AES.blocksize() != 0) 
 			numBlocks++;
 		System.err.println("Number of Blocks: " + Integer.toString(numBlocks));
-		System.err.println("Encrypted Message Size: " + cipherBlocks.getOutput().length);
+		System.err.println("Encrypted Message Size: " + encrypted.getOutput().length);
 		
-		ArrayList<EncThreadCTR> EncThreads = new ArrayList<EncThreadCTR>();
+		ArrayList<CTR> EncThreads = new ArrayList<CTR>();
 		
 		//Create threads, one per block
 		for (int i = 0; i < numBlocks; i++) {
@@ -57,12 +57,10 @@ class CTREnc
 			int msg_pos = i * AES.blocksize();
 			
 			byte[] msg = Arrays.copyOfRange(data, msg_pos, Math.min(data.length, msg_pos + AES.blocksize()));
-			EncThreadCTR t = new EncThreadCTR(msg, key, Arrays.copyOf(iv,AES.blocksize()), enc_pos, cipherBlocks);
+			CTR t = new CTR(msg, key, Arrays.copyOf(iv,AES.blocksize()), enc_pos, encrypted);
 			EncThreads.add(t);
 			t.start();
 			try {
-				//System.err.println("iv last 4 bytes = " + utils.intValue(iv));
-				//utils.printByteArr(iv);
 				iv = utils.addOne(iv);
 			}
 			catch (Exception e) {
@@ -74,7 +72,7 @@ class CTREnc
 		}
 		//utils.printByteArr(iv);
 		//join threads
-		for (EncThreadCTR t : EncThreads) {
+		for (CTR t : EncThreads) {
 			try {
 				t.join();
 			}
@@ -85,7 +83,7 @@ class CTREnc
 
         try
         {
-            Files.write(cmd_args.getOutputFile(), cipherBlocks.getOutput());
+            Files.write(cmd_args.getOutputFile(), encrypted.getOutput());
         }
         catch(IOException e)                   { System.err.println(e.getMessage()); }
         catch(UnsupportedOperationException e) { System.err.println(e.getMessage()); }
