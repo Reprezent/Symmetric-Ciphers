@@ -12,6 +12,7 @@ import java.lang.InterruptedException;
 import java.lang.SecurityException;
 import java.lang.Integer;
 import java.lang.Math.*;
+import java.nio.ByteBuffer;
 
 class CTREnc
 {
@@ -39,32 +40,39 @@ class CTREnc
 		}
 		
 		SharedData cipherBlocks = new SharedData(AES.blocksize() + data.length);
+		cipherBlocks.insertBlock(0,iv);
+		//utils.printByteArr(iv);
 		
 		int numBlocks = data.length / AES.blocksize();
 		if (data.length % AES.blocksize() != 0) 
 			numBlocks++;
 		System.err.println("Number of Blocks: " + Integer.toString(numBlocks));
+		System.err.println("Encrypted Message Size: " + cipherBlocks.getOutput().length);
 		
 		ArrayList<EncThreadCTR> EncThreads = new ArrayList<EncThreadCTR>();
 		
 		//Create threads, one per block
 		for (int i = 0; i < numBlocks; i++) {
-			int pos = i * AES.blocksize();
-			byte[] msg = Arrays.copyOfRange(data, pos, Math.min(data.length, pos + AES.blocksize()));
-			EncThreadCTR t = new EncThreadCTR(msg, key, iv, pos, cipherBlocks);
+			int enc_pos = (i+1) * AES.blocksize();
+			int msg_pos = i * AES.blocksize();
+			
+			byte[] msg = Arrays.copyOfRange(data, msg_pos, Math.min(data.length, msg_pos + AES.blocksize()));
+			EncThreadCTR t = new EncThreadCTR(msg, key, Arrays.copyOf(iv,AES.blocksize()), enc_pos, cipherBlocks);
 			EncThreads.add(t);
 			t.start();
 			try {
-				//iv = utils.addOne(iv);
+				//System.err.println("iv last 4 bytes = " + utils.intValue(iv));
+				//utils.printByteArr(iv);
+				iv = utils.addOne(iv);
 			}
 			catch (Exception e) {
 				System.err.println("iv overflow");
-				System.err.println(iv);
+				utils.printByteArr(iv);
 				System.err.println(i);
 				System.exit(1);
 			}
 		}
-		
+		//utils.printByteArr(iv);
 		//join threads
 		for (EncThreadCTR t : EncThreads) {
 			try {

@@ -1,3 +1,5 @@
+import java.nio.ByteBuffer;
+import java.util.Arrays;
 class utils
 {
     public static byte[] hexStringToBinary(byte[] hex_string)
@@ -12,18 +14,35 @@ class utils
         return rv;
     }
 	
-	//from: https://stackoverflow.com/questions/32253298/adding-1-to-binary-byte-array
+	//need to overflow check cases where every byte of iv is maxed out (adding 1 does what)
+	//modified from: https://stackoverflow.com/questions/32253298/adding-1-to-binary-byte-array
 	public static byte[] addOne(byte[] A) throws Exception {
         for (int i = A.length - 1; i >= 0; i--) {
-            if (A[i] == 0) {
-                A[i] = 1;
-                return A;
-            }
-            A[i] = 0;
-            if (i == 0) {
+            if (A[i] == 127) {
+				A[i] = 0;
+				continue;
+			}
+			if (i == 0) {
                 throw new Exception("Overflow");
             }
+			A[i] += 1;
+			return A;
+            
         }
         return A;
     }
+	
+	public static int intValue(byte[] A) {
+		if (A.length < 4)
+			return 0;
+		ByteBuffer wrapper = ByteBuffer.wrap(Arrays.copyOfRange(A,A.length-4,A.length));
+		return wrapper.getInt();
+	}
+	
+	public static void printByteArr(byte[] A) {
+		for (int i = 0; i<A.length; i++) {
+			System.out.format("%d ", A[i]);
+		}
+		System.out.format("\n");
+	}
 }

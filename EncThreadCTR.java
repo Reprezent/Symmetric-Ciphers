@@ -24,8 +24,8 @@ public class EncThreadCTR extends Thread
 	{
 		byte[] iv_enc = AES.Encrypt(iv, key);
 		byte[] buffer = new byte[AES.blocksize()];
-
-		for (int i = 0; i < msg.length; i++) {
+		int i = 0;
+		for (i = 0; i < msg.length; i++) {
 			try {
 				buffer[i] = (byte)(iv_enc[i] ^ msg[i]);
 			}
@@ -35,6 +35,6 @@ public class EncThreadCTR extends Thread
 			}
 		}
 
-		cipherBase.insertBlock(pos, buffer);
+		cipherBase.insertBlock(pos, Arrays.copyOf(buffer,i));
 	}
 }
