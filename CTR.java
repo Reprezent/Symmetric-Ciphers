@@ -1,47 +1,45 @@
-import java.util.Random;
+// Richard Riedel, J.T. Liso, Sean Whalen
+// CS 583 Fall 2017
+// Programming Assignment 1
+
+import java.net.*;
 import java.util.Arrays;
 import javax.crypto.*;
 import javax.crypto.spec.*;
 import java.security.*;
 
-class CTR{
+// Thread used by CTREnc and CTRDec
+public class CTR extends Thread
+{
+	byte[] msg;
+	byte[] key;
+	byte[] iv;
+	int pos;
+	SharedData data;
 
-	public static byte[] encrypt(byte[] msg, byte[] key, byte[] iv){
-        byte[] padded_msg = Padder.pad(msg, AES.blocksize());
-        // Prepend IV
-		byte[] encrypted_msg = Arrays.copyOf(iv, padded_msg.length + iv.length);
-		byte[] cipher = iv;
-        byte[] buffer = new byte[AES.blocksize()];
-    
-		return encrypted_msg;
+	public CTR(byte[] msg, byte[] key, byte[] iv, int pos, SharedData outputArray)
+	{
+		this.msg = msg;
+		this.key = key;
+		this.iv = iv;
+		this.pos = pos;
+		this.data = outputArray;
 	}
+	public void run()
+	{
+		byte[] iv_enc = AES.Encrypt(iv, key);
+		byte[] buffer = new byte[AES.blocksize()];
+		int i = 0;
+		for (i = 0; i < msg.length; i++) {
+			try {
+				buffer[i] = (byte)(iv_enc[i] ^ msg[i]);
+			}
+			catch (ArrayIndexOutOfBoundsException e)
+			{
+				System.err.println("I is " + Integer.toString(i));
+			}
+		}
 
-    public static byte[] encrypt(byte[] msg, byte[] key)
-    {
-        // IV generation
-        SecureRandom rng = new SecureRandom();
-        byte[] buffer = new byte[AES.blocksize()];
-        rng.nextBytes(buffer);
-
-        return encrypt(msg, key, buffer);
-    }
-
-	public static byte[] decrypt(byte[] msg, byte[] key, byte[] iv){
-		byte[] decrypted =  new byte[msg.length];
-		
-		//unpad
-
-
-		return decrypted;
+		data.insertBlock(pos, Arrays.copyOf(buffer,i));
 	}
-
-    public static byte[] decrypt(byte[] msg, byte[] key)
-    {
-        // IV generation
-        SecureRandom rng = new SecureRandom();
-        byte[] buffer = new byte[AES.blocksize()];
-        rng.nextBytes(buffer);
-
-        return decrypt(msg, key, buffer);
-    }
 }
