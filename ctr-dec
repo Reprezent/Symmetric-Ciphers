@@ -1,2 +1,2 @@
 #! /bin/sh
-java -jar ctr-dec.jar "$@"
+java -cp classes CTRDec "$@"

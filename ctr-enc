@@ -1,2 +1,2 @@
 #! /bin/sh
-java -jar ctr-enc.jar "$@"
+java -cp classes CTREnc "$@"

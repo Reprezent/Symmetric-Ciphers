@@ -1,2 +1,2 @@
 #! /bin/sh
-java -jar cbc-dec.jar "$@"
+java -cp classes CBCDec "$@"
